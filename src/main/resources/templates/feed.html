@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Название страницы-->
+    <title>Лента</title>
+
+    <!-- Стили страницы -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .form-container {
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input[type="text"], input[type="number"], input[type="checkbox"] {
+            width: 100%;
+            padding: 5px;
+            margin-top: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .btn-add {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<h1>Посты</h1>
+<br>
+<button class="btn-add" onclick="toggleForm()">Новый пост</button>
+<!-- Скрываемая форма для добавления нового поста -->
+<div class="form-container" style="display: none;" id="postForm">
+    <h2>Новый пост</h2>
+    <form th:action="@{/feed}" method="POST" th:object="${blogPostDto}" enctype="multipart/form-data">
+        <label for="name">Название:</label>
+        <input type="text" id="name" name="name" required>
+        <label for="file">Прикрепите картинку:</label>
+        <input type="file" id="file" name="file" accept="image/*" class="form-control-file" required>
+        <label for="text">Текст:</label>
+        <input type="text" id="text" name="text" required>
+        <label for="tagsSeparatedByComma">Теги (ввод - через запятую):</label>
+        <input type="text" id="tagsSeparatedByComma" name="tagsSeparatedByComma" required>
+        <button type="submit">Добавить</button>
+    </form>
+</div>
+
+<!-- Скрипты-->
+<script>
+    function toggleForm() {
+        const form = document.getElementById('postForm');
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+</script>
+</body>
+</html>

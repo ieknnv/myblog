@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS "blog_post" (
 	"id" serial NOT NULL UNIQUE,
 	"post_name" varchar(100) NOT NULL,
 	"post_text" text NOT NULL,
-	"base_64_image" text NOT NULL,
+	"post_image" bytea NOT NULL,
 	"number_of_likes" bigint NOT NULL DEFAULT '0',
 	"published_timestamp" timestamp with time zone NOT NULL,
 	PRIMARY KEY ("id")

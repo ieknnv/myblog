@@ -16,7 +16,7 @@ import lombok.ToString;
 public class BlogPost {
     private Integer id;
     private String name;
-    private String base64Image;
+    private byte[] image;
     private String text;
     private List<String> tags;
 }

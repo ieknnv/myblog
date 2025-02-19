@@ -2,7 +2,6 @@ package org.ieknnv.myblog.mapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -15,9 +14,7 @@ public final class BlogPostMapper {
     }
 
     public static BlogPost toModel(BlogPostDto dto) throws IOException {
-        byte[] bytes = dto.getFile().getBytes();
-        String imageBase64 = Base64.getEncoder().encodeToString(bytes);
-        return new BlogPost(dto.getId(), dto.getName(), imageBase64, dto.getText(), getTags(dto));
+        return new BlogPost(dto.getId(), dto.getName(), dto.getFile().getBytes(), dto.getText(), getTags(dto));
     }
 
     private static List<String> getTags(BlogPostDto dto) {

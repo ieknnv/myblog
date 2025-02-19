@@ -38,7 +38,7 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         this.insertBlogPost = new SimpleJdbcInsert(dataSource).withTableName("blog_post")
                 .usingGeneratedKeyColumns("id")
-                .usingColumns("post_name", "post_text", "base_64_image");
+                .usingColumns("post_name", "post_text", "post_image");
         this.insertTag = new SimpleJdbcInsert(dataSource).withTableName("post_tag")
                 .usingGeneratedKeyColumns("id")
                 .usingColumns("tag_name");
@@ -51,7 +51,7 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("post_name", post.getName());
         parameters.put("post_text", post.getText());
-        parameters.put("base_64_image", post.getBase64Image());
+        parameters.put("post_image", post.getImage());
         Number newId = insertBlogPost.executeAndReturnKey(parameters);
         saveTags(newId.intValue(), post.getTags());
     }

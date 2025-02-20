@@ -1,8 +1,10 @@
 package org.ieknnv.myblog.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.ieknnv.myblog.dto.BlogPostDto;
+import org.ieknnv.myblog.dto.BlogPostPreviewDto;
 import org.ieknnv.myblog.service.BlogPostService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +25,9 @@ public class FeedController {
     }
 
     @GetMapping
-    public String getFeed() {
+    public String getFeed(Model model) {
+        List<BlogPostPreviewDto> feed = blogPostService.getPostFeed();
+        model.addAttribute("feed", feed);
         return "feed";
     }
 

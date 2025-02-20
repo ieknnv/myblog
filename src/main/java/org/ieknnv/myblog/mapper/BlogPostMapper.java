@@ -11,6 +11,8 @@ import org.ieknnv.myblog.model.BlogPost;
 
 public final class BlogPostMapper {
 
+    private static final int NUMBER_OF_PREVIEW_SENTENCES = 3;
+
     private BlogPostMapper() {
     }
 
@@ -23,11 +25,30 @@ public final class BlogPostMapper {
         BlogPostPreviewDto dto = new BlogPostPreviewDto();
         dto.setId(model.getId());
         dto.setName(model.getName());
-        dto.setTextPreview(model.getText()); // TODO preview
+        dto.setTextPreview(getPreview(model.getText()));
         dto.setNumberOfComments(0); // TODO comments
         dto.setNumberOfLikes(model.getNumberOfLikes());
         dto.setTagsSeparatedByComma(StringUtils.join(model.getTags(), ", "));
         return dto;
+    }
+
+    private static String getPreview(String text) {
+        if (StringUtils.isEmpty(text)) {
+            return StringUtils.EMPTY;
+        }
+
+        String[] sentences = text.split("(?<=[.!?])\\s+");
+
+        if (sentences.length <= NUMBER_OF_PREVIEW_SENTENCES) {
+            return text;
+        }
+
+        StringBuilder preview = new StringBuilder();
+        for (int i = 0; i < NUMBER_OF_PREVIEW_SENTENCES; i++) {
+            preview.append(sentences[i]).append(" ");
+        }
+
+        return preview.toString().trim() + " ...";
     }
 
     private static List<String> getTags(BlogPostDto dto) {

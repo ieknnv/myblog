@@ -20,7 +20,7 @@
             margin-top: 10px;
         }
         input[type="text"], input[type="number"], input[type="checkbox"] {
-            width: 100%;
+            width: 50%;
             padding: 5px;
             margin-top: 5px;
         }
@@ -50,6 +50,12 @@
         .block .text {
             flex: 1;
         }
+        textarea {
+            width: 50%;
+            height: 300px; /* Adjust height to match the number of rows */
+            resize: none; /* Prevent resizing if needed */
+            overflow-y: scroll; /* Add vertical scroll bar */
+        }
     </style>
 </head>
 <body>
@@ -65,9 +71,11 @@
         <label for="file">Прикрепите картинку:</label>
         <input type="file" id="file" name="file" accept="image/*" class="form-control-file" required>
         <label for="text">Текст:</label>
-        <input type="text" id="text" name="text" required>
+        <!--<input type="text" id="text" name="text" required>-->
+        <textarea id="text" name="text" required></textarea>
         <label for="tagsSeparatedByComma">Теги (ввод - через запятую):</label>
-        <input type="text" id="tagsSeparatedByComma" name="tagsSeparatedByComma" required>
+        <input type="text" id="tagsSeparatedByComma" name="tagsSeparatedByComma">
+        <br>
         <button type="submit">Добавить</button>
     </form>
 </div>

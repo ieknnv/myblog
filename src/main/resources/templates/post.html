@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Название страницы-->
+    <title>Пост</title>
+
+    <!-- Стили страницы -->
+    <style>
+        .text-container {
+            width: 600px; /* Fixed width */
+            padding: 10px; /* Adds some spacing */
+            word-wrap: break-word; /* Ensures long words wrap */
+            overflow-wrap: break-word; /* Alternative for better compatibility */
+            white-space: pre-wrap; /* Ensures wrapping */
+            font-size: 18px; /* Adjust size as needed */
+            font-family: Roboto, sans-serif; /* Change font style */
+        }
+
+        /* Container for hashtags */
+        .hashtags-container {
+            width: 600px; /* Fixed width */
+            display: flex;
+            flex-wrap: wrap; /* Allows wrapping on smaller screens */
+            gap: 10px; /* Spacing between tags */
+            padding: 10px;
+        }
+
+        /* Individual hashtag styles */
+        .hashtag {
+            background-color: #f3f3f3; /* Light gray background */
+            color: #333; /* Dark text */
+            padding: 5px 12px;
+            border-radius: 20px; /* Rounded corners */
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        /* Hover effect */
+        .hashtag:hover {
+            background-color: #ddd; /* Darker gray on hover */
+        }
+
+        /* Container for buttons */
+        .button-container {
+            width: 600px; /* Fixed width */
+            display: flex;
+            padding: 0;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden; /* Ensures no border-radius issues */
+        }
+
+        /* Button styles */
+        .btn {
+            width: 150px;
+            padding: 12px 0;
+            border: none;
+            background-color: #f2f2f2; /* Light grey background */
+            color: black; /* Black text color */
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease; /* Smooth transition for all effects */
+            text-align: center;
+            border-radius: 4px; /* Rounded corners */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+
+        /* Hover effect */
+        .btn:hover {
+            background-color: #e0e0e0; /* Slightly darker gray */
+            transform: translateY(-2px); /* Slightly lift the button */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Stronger shadow */
+        }
+
+        /* Remove space between buttons */
+        .btn:not(:last-child) {
+            border-right: 1px solid #ddd; /* Thin separator between buttons */
+        }
+    </style>
+</head>
+<body>
+    <h1 th:text="${postDto.name}" style="font-family: Roboto, sans-serif;"></h1>
+    <img th:src="@{/image/post/{postId}(postId=${postDto.id})}" width="600" height="400">
+    <div class="text-container" th:text="${postDto.text}"></div>
+    <!-- Hashtags Container -->
+    <div class="hashtags-container">
+        <span class="hashtag" th:each="tag : ${postDto.tags}" th:text="${tag}"></span>
+    </div>
+    <div class="button-container">
+        <button class="btn" th:text="'Нравится: ' + ${postDto.numberOfLikes}"></button>
+        <button class="btn">Редактировать</button>
+        <button class="btn">Удалить</button>
+    </div>
+</body>
+</html>

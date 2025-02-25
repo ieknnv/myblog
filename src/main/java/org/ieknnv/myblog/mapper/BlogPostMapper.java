@@ -21,6 +21,19 @@ public final class BlogPostMapper {
                 dto.getNumberOfLikes(), getTags(dto));
     }
 
+    public static BlogPostDto toDto(BlogPost model) {
+        BlogPostDto dto = new BlogPostDto();
+        dto.setId(model.getId());
+        dto.setName(model.getName());
+        dto.setFile(null);
+        dto.setImage(model.getImage());
+        dto.setText(model.getText());
+        dto.setNumberOfLikes(model.getNumberOfLikes());
+        dto.setTagsSeparatedByComma(StringUtils.join(model.getTags(), ", "));
+        dto.setTags(model.getTags());
+        return dto;
+    }
+
     public static BlogPostPreviewDto toPreviewDto(BlogPost model) {
         BlogPostPreviewDto dto = new BlogPostPreviewDto();
         dto.setId(model.getId());

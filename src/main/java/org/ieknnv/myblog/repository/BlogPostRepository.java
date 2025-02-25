@@ -11,4 +11,6 @@ public interface BlogPostRepository {
     byte[] findImageByPostId(Integer postId);
 
     List<BlogPost> getPostFeed();
+
+    BlogPost findPostById(Integer postId);
 }

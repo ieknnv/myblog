@@ -71,7 +71,6 @@
         <label for="file">Прикрепите картинку:</label>
         <input type="file" id="file" name="file" accept="image/*" class="form-control-file" required>
         <label for="text">Текст:</label>
-        <!--<input type="text" id="text" name="text" required>-->
         <textarea id="text" name="text" required></textarea>
         <label for="tagsSeparatedByComma">Теги (ввод - через запятую):</label>
         <input type="text" id="tagsSeparatedByComma" name="tagsSeparatedByComma">
@@ -85,7 +84,7 @@
 <div class="block" th:each="blogPost : ${feed}">
     <img th:src="@{/image/post/{postId}(postId=${blogPost.id})}">
     <div class="text">
-        <h1 th:text="${blogPost.name}"/>
+        <a th:href="@{/post/{id}(id=${blogPost.id})}"><h1 th:text="${blogPost.name}"/></a>
         <p><i>Комментариев: <span th:text="${blogPost.numberOfComments}"/>  Лайков: <span th:text="${blogPost.numberOfLikes}"/> Теги: <span th:text="${blogPost.tagsSeparatedByComma}"/></i></p>
         <p th:text="${blogPost.textPreview}"/>
     </div>

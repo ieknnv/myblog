@@ -1,5 +1,7 @@
 package org.ieknnv.myblog.dto;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.AllArgsConstructor;
@@ -17,7 +19,9 @@ public class BlogPostDto {
     private Integer id;
     private String name;
     private MultipartFile file;
+    private byte[] image;
     private String text;
     private long numberOfLikes;
     private String tagsSeparatedByComma;
+    private List<String> tags;
 }

@@ -42,4 +42,10 @@ public class BlogPostServiceImpl implements BlogPostService{
                 .collect(Collectors.toList());
 
     }
+
+    @Override
+    public Optional<BlogPostDto> findPostById(Integer postId) {
+        return Optional.ofNullable(blogPostRepository.findPostById(postId))
+                .map(BlogPostMapper::toDto);
+    }
 }

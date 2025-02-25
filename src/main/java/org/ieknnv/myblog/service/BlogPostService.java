@@ -14,4 +14,6 @@ public interface BlogPostService {
     Optional<byte[]> findImageByPostId(Integer postId);
 
     List<BlogPostPreviewDto> getPostFeed();
+
+    Optional<BlogPostDto> findPostById(Integer postId);
 }

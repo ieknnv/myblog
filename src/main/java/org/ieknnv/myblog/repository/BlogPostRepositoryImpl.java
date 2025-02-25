@@ -10,7 +10,6 @@ import javax.sql.DataSource;
 
 import org.ieknnv.myblog.model.BlogPost;
 import org.ieknnv.myblog.model.Tag;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -41,7 +40,14 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
             ORDER BY bp.id DESC
             """;
 
-    private final JdbcTemplate jdbcTemplate;
+    private static final String SELECT_POST_BY_ID_QUERY = """
+            SELECT bp.id, bp.post_name, bp.post_text, bp.post_image, bp.number_of_likes, pt.tag_name
+            FROM blog_post bp
+            LEFT JOIN post_tag_relation ptr ON bp.id = ptr.post_id
+            LEFT JOIN post_tag pt ON pt.id = ptr.tag_id
+            WHERE bp.id = :id
+            """;
+
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final SimpleJdbcInsert insertBlogPost;
     private final SimpleJdbcInsert insertTag;
@@ -72,8 +78,7 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
         return new ArrayList<>(blogPostMap.values());
     };
 
-    public BlogPostRepositoryImpl(DataSource dataSource, JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public BlogPostRepositoryImpl(DataSource dataSource) {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         this.insertBlogPost = new SimpleJdbcInsert(dataSource).withTableName("blog_post")
                 .usingGeneratedKeyColumns("id")
@@ -106,6 +111,13 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
     @Override
     public List<BlogPost> getPostFeed() {
         return namedParameterJdbcTemplate.query(SELECT_ALL_POSTS_QUERY, postRowMapper);
+    }
+
+    @Override
+    public BlogPost findPostById(Integer postId) {
+        SqlParameterSource parameters = new MapSqlParameterSource("id", postId);
+        List<BlogPost> result = namedParameterJdbcTemplate.query(SELECT_POST_BY_ID_QUERY, parameters, postRowMapper);
+        return CollectionUtils.isEmpty(result) ? null : result.getFirst();
     }
 
     private void saveTags(int newPostId, List<String> tags) {

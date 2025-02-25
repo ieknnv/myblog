@@ -18,5 +18,4 @@ public class BlogPostPreviewDto {
     private long numberOfLikes;
     private long numberOfComments;
     private String tagsSeparatedByComma;
-
 }

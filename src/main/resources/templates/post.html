@@ -82,20 +82,107 @@
         .btn:not(:last-child) {
             border-right: 1px solid #ddd; /* Thin separator between buttons */
         }
+
+        .comment-container {
+            width: 600px; /* Fixed width */
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            position: relative;
+        }
+
+        .comment-username {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .comment-text {
+            font-size: 14px;
+            color: #555;
+            word-wrap: break-word;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #f2f2f2;
+            color: black;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        .remove-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        .comment-add-container {
+        width: 600px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .comment-input, .comment-textarea {
+        width: 550px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .comment-textarea {
+        height: 80px;
+        resize: none;
+    }
+    .comment-button {
+        background-color: #f2f2f2;
+        color: black;
+        border: none;
+        padding: 8px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .comment-button:hover {
+        background-color: #e0e0e0;
+    }
     </style>
 </head>
 <body>
     <h1 th:text="${postDto.name}" style="font-family: Roboto, sans-serif;"></h1>
     <img th:src="@{/image/post/{postId}(postId=${postDto.id})}" width="600" height="400">
     <div class="text-container" th:text="${postDto.text}"></div>
-    <!-- Hashtags Container -->
+    <!--  Хэш теги -->
     <div class="hashtags-container">
         <span class="hashtag" th:each="tag : ${postDto.tags}" th:text="${tag}"></span>
     </div>
+    <!--  Кнопки редактирования/Удаления -->
     <div class="button-container">
         <button class="btn" th:text="'Нравится: ' + ${postDto.numberOfLikes}"></button>
         <button class="btn">Редактировать</button>
         <button class="btn">Удалить</button>
+    </div>
+    <br>
+    <h3 style="font-family: Roboto, sans-serif;">Комментарии</h3>
+    <!-- Форма добавления нового комментария -->
+    <div class="comment-container">
+        <form th:action="@{/posts/{postId}/comment(postId=${postDto.id})}" method="POST" th:object="${commentDto}">
+            <input type="text" id="nickName" name="nickName" placeholder="Ваше имя:" class="comment-input" required>
+            <textarea id="content" name="content" placeholder="Напишите ваш комментарий здесь..." class="comment-textarea" required></textarea>
+            <button type="submit" class="comment-button">Добавить комментарий</button>
+        </form>
+    </div>
+    <!-- Список комментариев -->
+    <div class="comment-container" th:each="comment : ${comments}">
+        <div class="comment-username"><span th:text="${comment.nickName}"/></div>
+        <div class="comment-text"><span th:text="${comment.content}"/></div>
+        <button class="remove-btn" onclick="removeComment(this)">Удалить</button>
     </div>
 </body>
 </html>

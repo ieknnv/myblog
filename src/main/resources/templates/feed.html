@@ -84,7 +84,7 @@
 <div class="block" th:each="blogPost : ${feed}">
     <img th:src="@{/image/post/{postId}(postId=${blogPost.id})}">
     <div class="text">
-        <a th:href="@{/post/{id}(id=${blogPost.id})}"><h1 th:text="${blogPost.name}"/></a>
+        <a th:href="@{/posts/{id}(id=${blogPost.id})}"><h1 th:text="${blogPost.name}"/></a>
         <p><i>Комментариев: <span th:text="${blogPost.numberOfComments}"/>  Лайков: <span th:text="${blogPost.numberOfLikes}"/> Теги: <span th:text="${blogPost.tagsSeparatedByComma}"/></i></p>
         <p th:text="${blogPost.textPreview}"/>
     </div>

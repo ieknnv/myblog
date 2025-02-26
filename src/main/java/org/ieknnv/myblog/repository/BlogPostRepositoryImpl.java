@@ -52,6 +52,8 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
     private final SimpleJdbcInsert insertBlogPost;
     private final SimpleJdbcInsert insertTag;
     private final SimpleJdbcInsert insertPostTagRelation;
+
+    // RowMappers
     private final RowMapper<Tag> tagRowMapper = (ResultSet resultSet, int rowNum) -> new Tag(
             resultSet.getInt("id"), resultSet.getString("tag_name"));
     private final RowMapper<byte[]> imageRowMapper = (ResultSet resultSet, int rowNum) -> resultSet.getBytes(

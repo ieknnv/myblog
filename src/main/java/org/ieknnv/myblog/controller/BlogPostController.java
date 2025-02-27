@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.ieknnv.myblog.dto.BlogPostDto;
 import org.ieknnv.myblog.dto.CommentDto;
+import org.ieknnv.myblog.dto.CommentUpdateDto;
 import org.ieknnv.myblog.service.BlogPostService;
 import org.ieknnv.myblog.service.CommentService;
 import org.springframework.http.HttpStatus;
@@ -42,6 +43,14 @@ public class BlogPostController {
     @PostMapping("/{postId}/comment")
     public String addComment(@PathVariable(name = "postId") int postId, @ModelAttribute CommentDto commentDto) {
         commentService.addCommentToPost(commentDto);
+        return "redirect:/posts/" + postId;
+    }
+
+    @PostMapping("/{postId}/comments/{commentId}")
+    public String updateComment(@PathVariable(name = "postId") int postId,
+            @PathVariable(name = "commentId") int commentId, @ModelAttribute CommentUpdateDto commentUpdateDto) {
+        commentUpdateDto.setCommentId(commentId);
+        commentService.updateContent(commentUpdateDto);
         return "redirect:/posts/" + postId;
     }
 }

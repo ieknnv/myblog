@@ -20,6 +20,12 @@ public class CommentRepositoryImpl implements CommentRepository{
     private static final String SELECT_COMMENTS_BY_POST_QUERY = """
             SELECT * FROM post_comment
             WHERE post_id = :postId
+            ORDER BY id
+            """;
+    private static final String UPDATE_COMMENT_CONTENT_QUERY = """
+            UPDATE post_comment
+            SET content = :newContent
+            WHERE id = :commentId
             """;
     private static final String POST_ID_COLUMN = "post_id";
     private static final String NICKNAME_COLUMN = "nickname";
@@ -57,5 +63,13 @@ public class CommentRepositoryImpl implements CommentRepository{
         parameters.put(NICKNAME_COLUMN, comment.getNickName());
         parameters.put(CONTENT_COLUMN, comment.getContent());
         insertComment.execute(parameters);
+    }
+
+    @Override
+    public void updateContent(Integer commentId, String newContent) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("commentId", commentId);
+        parameters.put("newContent", newContent);
+        namedParameterJdbcTemplate.update(UPDATE_COMMENT_CONTENT_QUERY, parameters);
     }
 }

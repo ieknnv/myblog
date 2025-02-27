@@ -27,6 +27,10 @@ public class CommentRepositoryImpl implements CommentRepository{
             SET content = :newContent
             WHERE id = :commentId
             """;
+    private static final String DELETE_COMMENT_QUERY = """
+            DELETE FROM post_comment
+            WHERE id = :commentId
+            """;
     private static final String POST_ID_COLUMN = "post_id";
     private static final String NICKNAME_COLUMN = "nickname";
     private static final String CONTENT_COLUMN = "content";
@@ -71,5 +75,12 @@ public class CommentRepositoryImpl implements CommentRepository{
         parameters.put("commentId", commentId);
         parameters.put("newContent", newContent);
         namedParameterJdbcTemplate.update(UPDATE_COMMENT_CONTENT_QUERY, parameters);
+    }
+
+    @Override
+    public void delete(Integer commentId) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("commentId", commentId);
+        namedParameterJdbcTemplate.update(DELETE_COMMENT_QUERY, parameters);
     }
 }

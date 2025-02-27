@@ -34,4 +34,9 @@ public class CommentServiceImpl implements CommentService {
     public void updateContent(CommentUpdateDto commentUpdateDto) {
         repository.updateContent(commentUpdateDto.getCommentId(), commentUpdateDto.getUpdatedCommentContent());
     }
+
+    @Override
+    public void delete(Integer commentId) {
+        repository.delete(commentId);
+    }
 }

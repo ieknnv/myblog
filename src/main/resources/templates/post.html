@@ -191,7 +191,10 @@
         <form th:action="@{/posts/{postId}/comments/{commentId}(postId=${postDto.id}, commentId=${comment.id})}" method="POST" th:object="${commentUpdateDto}">
             <textarea id="commentContent" name="updatedCommentContent" th:text="${comment.content}" class="comment-text" rows="5"></textarea>
         </form>
-        <button class="remove-btn" onclick="removeComment(this)">Удалить</button>
+        <form th:action="@{/posts/{postId}/comments/{commentId}/delete(postId=${postDto.id}, commentId=${comment.id})}" method="POST">
+            <input type="hidden" name="_method" value="delete">
+            <button type="submit" class="remove-btn">Удалить</button>
+        </form>
     </div>
 
     <script>

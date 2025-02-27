@@ -59,4 +59,11 @@ public class BlogPostController {
         blogPostService.addLike(postId);
         return "redirect:/posts/" + postId;
     }
+
+    @PostMapping(value = "/{postId}/comments/{commentId}/delete", params = "_method=delete")
+    public String deleteComment(@PathVariable(name = "postId") int postId,
+            @PathVariable(name = "commentId") int commentId) {
+        commentService.delete(commentId);
+        return "redirect:/posts/" + postId;
+    }
 }

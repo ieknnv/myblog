@@ -8,4 +8,5 @@ public interface CommentRepository {
     List<Comment> findAllByPostId(Integer postId);
     void save(Comment comment);
     void updateContent(Integer commentId, String newContent);
+    void delete(Integer commentId);
 }

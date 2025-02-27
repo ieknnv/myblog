@@ -169,7 +169,9 @@
     </div>
     <!--  Кнопки редактирования/Удаления -->
     <div class="button-container">
+        <form th:action="@{/posts/{postId}/likes(postId=${postDto.id})}" method="POST">
         <button class="btn" th:text="'Нравится: ' + ${postDto.numberOfLikes}"></button>
+        </form>
         <button class="btn">Редактировать</button>
         <button class="btn">Удалить</button>
     </div>

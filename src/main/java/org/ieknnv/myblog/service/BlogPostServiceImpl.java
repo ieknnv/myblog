@@ -48,4 +48,9 @@ public class BlogPostServiceImpl implements BlogPostService{
         return Optional.ofNullable(blogPostRepository.findPostById(postId))
                 .map(BlogPostMapper::toDto);
     }
+
+    @Override
+    public void addLike(Integer postId) {
+        blogPostRepository.addLike(postId);
+    }
 }

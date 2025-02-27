@@ -13,4 +13,6 @@ public interface BlogPostRepository {
     List<BlogPost> getPostFeed();
 
     BlogPost findPostById(Integer postId);
+
+    void addLike(Integer postId);
 }

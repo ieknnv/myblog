@@ -53,4 +53,10 @@ public class BlogPostController {
         commentService.updateContent(commentUpdateDto);
         return "redirect:/posts/" + postId;
     }
+
+    @PostMapping("/{postId}/likes")
+    public String addLike(@PathVariable(name = "postId") int postId) {
+        blogPostService.addLike(postId);
+        return "redirect:/posts/" + postId;
+    }
 }

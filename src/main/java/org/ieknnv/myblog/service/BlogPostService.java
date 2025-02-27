@@ -16,4 +16,6 @@ public interface BlogPostService {
     List<BlogPostPreviewDto> getPostFeed();
 
     Optional<BlogPostDto> findPostById(Integer postId);
+
+    void addLike(Integer postId);
 }

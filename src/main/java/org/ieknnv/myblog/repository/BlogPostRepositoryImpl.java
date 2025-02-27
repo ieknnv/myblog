@@ -48,6 +48,12 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
             WHERE bp.id = :id
             """;
 
+    private static final String UPDATE_NUMBER_OF_LIKES_QUERY = """
+            UPDATE blog_post
+            SET number_of_likes = number_of_likes + 1
+            WHERE id = :postId
+            """;
+
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final SimpleJdbcInsert insertBlogPost;
     private final SimpleJdbcInsert insertTag;
@@ -120,6 +126,13 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
         SqlParameterSource parameters = new MapSqlParameterSource("id", postId);
         List<BlogPost> result = namedParameterJdbcTemplate.query(SELECT_POST_BY_ID_QUERY, parameters, postRowMapper);
         return CollectionUtils.isEmpty(result) ? null : result.getFirst();
+    }
+
+    @Override
+    public void addLike(Integer postId) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("postId", postId);
+        namedParameterJdbcTemplate.update(UPDATE_NUMBER_OF_LIKES_QUERY, parameters);
     }
 
     private void saveTags(int newPostId, List<String> tags) {

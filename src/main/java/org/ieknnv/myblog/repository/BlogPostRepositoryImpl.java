@@ -65,6 +65,11 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
             WHERE id = :postId
             """;
 
+    private static final String DELETE_POST_QUERY = """
+            DELETE FROM blog_post
+            WHERE id = :postId
+            """;
+
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final SimpleJdbcInsert insertBlogPost;
     private final SimpleJdbcInsert insertTag;
@@ -160,6 +165,13 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("postId", postId);
         namedParameterJdbcTemplate.update(UPDATE_NUMBER_OF_LIKES_QUERY, parameters);
+    }
+
+    @Override
+    public void delete(Integer postId) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("postId", postId);
+        namedParameterJdbcTemplate.update(DELETE_POST_QUERY, parameters);
     }
 
     private void saveTags(int postId, List<String> tags) {

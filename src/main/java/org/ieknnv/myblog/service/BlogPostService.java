@@ -20,4 +20,6 @@ public interface BlogPostService {
     Optional<BlogPostDto> findPostById(Integer postId);
 
     void addLike(Integer postId);
+
+    void deletePost(Integer postId);
 }

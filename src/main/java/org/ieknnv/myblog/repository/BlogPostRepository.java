@@ -17,4 +17,6 @@ public interface BlogPostRepository {
     BlogPost findPostById(Integer postId);
 
     void addLike(Integer postId);
+
+    void delete(Integer postId);
 }

@@ -211,7 +211,11 @@
         <button class="btn" th:text="'Нравится: ' + ${postDto.numberOfLikes}"></button>
     </form>
     <button class="btn" onclick="toggleEditPostForm()">Редактировать</button>
-    <button class="btn">Удалить</button>
+    <form th:action="@{/posts/{postId}/delete(postId=${postDto.id})}" method="POST">
+        <input type="hidden" name="_method" value="delete">
+        <button class="btn" type="submit">Удалить</button>
+    </form>
+
 </div>
 <!-- Скрываемая форма для редактирования поста -->
 <div class="form-container" style="display: none;" id="postForm">

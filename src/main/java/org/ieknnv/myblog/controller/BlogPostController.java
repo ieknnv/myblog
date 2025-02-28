@@ -82,6 +82,12 @@ public class BlogPostController {
         return "redirect:/posts/" + postId;
     }
 
+    @PostMapping(value = "/{postId}/delete", params = "_method=delete")
+    public String deletePost(@PathVariable(name = "postId") int postId) {
+        blogPostService.deletePost(postId);
+        return "redirect:/feed";
+    }
+
     @ExceptionHandler(value = IOException.class)
     public String handleException(Model model) {
         model.addAttribute("error", "Не удалось загрузить картинку поста!");

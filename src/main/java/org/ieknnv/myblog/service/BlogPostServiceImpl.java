@@ -59,4 +59,9 @@ public class BlogPostServiceImpl implements BlogPostService{
     public void addLike(Integer postId) {
         blogPostRepository.addLike(postId);
     }
+
+    @Override
+    public void deletePost(Integer postId) {
+        blogPostRepository.delete(postId);
+    }
 }

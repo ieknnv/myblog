@@ -29,6 +29,6 @@ CREATE TABLE IF NOT EXISTS "post_tag_relation" (
 );
 
 
-ALTER TABLE "post_comment" ADD CONSTRAINT "post_comment_fk1" FOREIGN KEY ("post_id") REFERENCES "blog_post"("id");
-ALTER TABLE "post_tag_relation" ADD CONSTRAINT "post_tag_relation_fk1" FOREIGN KEY ("post_id") REFERENCES "blog_post"("id");
+ALTER TABLE "post_comment" ADD CONSTRAINT "post_comment_fk1" FOREIGN KEY ("post_id") REFERENCES "blog_post"("id") ON DELETE CASCADE;
+ALTER TABLE "post_tag_relation" ADD CONSTRAINT "post_tag_relation_fk1" FOREIGN KEY ("post_id") REFERENCES "blog_post"("id") ON DELETE CASCADE;
 ALTER TABLE "post_tag_relation" ADD CONSTRAINT "post_tag_relation_fk2" FOREIGN KEY ("tag_id") REFERENCES "post_tag"("id");

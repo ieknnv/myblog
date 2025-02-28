@@ -22,4 +22,6 @@ public interface BlogPostService {
     void addLike(Integer postId);
 
     void deletePost(Integer postId);
+
+    List<BlogPostPreviewDto> filterFeedByTags(List<String> tags);
 }

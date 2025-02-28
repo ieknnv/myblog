@@ -40,6 +40,23 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
             ORDER BY bp.id DESC
             """;
 
+    private static final String SELECT_POSTS_BY_TAGS_QUERY = """
+            SELECT selected_posts_with_tags.*
+            FROM (
+                SELECT bp.id, bp.post_name, bp.post_text, bp.post_image, bp.number_of_likes, pt.tag_name
+                FROM blog_post bp
+                JOIN post_tag_relation ptr ON bp.id = ptr.post_id
+                JOIN post_tag pt ON pt.id = ptr.tag_id
+            ) as selected_posts_with_tags
+            WHERE selected_posts_with_tags.id IN (
+                SELECT bp.id
+                FROM blog_post bp
+                JOIN post_tag_relation ptr ON bp.id = ptr.post_id
+                JOIN post_tag pt ON pt.id = ptr.tag_id
+                WHERE pt.tag_name in (:tags)
+            )
+            """;
+
     private static final String SELECT_POST_BY_ID_QUERY = """
             SELECT bp.id, bp.post_name, bp.post_text, bp.post_image, bp.number_of_likes, pt.tag_name
             FROM blog_post bp
@@ -172,6 +189,13 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("postId", postId);
         namedParameterJdbcTemplate.update(DELETE_POST_QUERY, parameters);
+    }
+
+    @Override
+    public List<BlogPost> findByTags(List<String> tags) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("tags", tags);
+        return namedParameterJdbcTemplate.query(SELECT_POSTS_BY_TAGS_QUERY, parameters, postRowMapper);
     }
 
     private void saveTags(int postId, List<String> tags) {

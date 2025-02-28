@@ -31,6 +31,12 @@
         }
         .btn-add {
             margin-bottom: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+        .btn-add:hover {
+            background-color: #0056b3;
         }
         .block {
             display: flex;
@@ -56,11 +62,46 @@
             resize: none; /* Prevent resizing if needed */
             overflow-y: scroll; /* Add vertical scroll bar */
         }
+
+         .search-container {
+            display: flex;
+            gap: 10px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            width: 1000px;
+        }
+        .search-container input {
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            flex: 1;
+        }
+        .search-container button {
+            padding: 8px 16px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .search-container button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
 <h1>Посты</h1>
 <br>
+<form th:action="@{/feed/filter-by-tags}" method="POST" th:object="${tagSearchRequestDtoDto}">
+    <div class="search-container">
+        <input type="text" id="searchInput" name="tagsSeparatedByComma" placeholder="Фильтрация по тегам (ввод - через запятую)">
+        <button type="submit">Искать</button>
+    </div>
+</form>
 <button class="btn-add" onclick="toggleForm()">Новый пост</button>
 <!-- Скрываемая форма для добавления нового поста -->
 <div class="form-container" style="display: none;" id="postForm">

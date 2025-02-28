@@ -46,7 +46,6 @@ public class BlogPostServiceImpl implements BlogPostService{
                 .stream()
                 .map(BlogPostMapper::toPreviewDto)
                 .collect(Collectors.toList());
-
     }
 
     @Override
@@ -63,5 +62,13 @@ public class BlogPostServiceImpl implements BlogPostService{
     @Override
     public void deletePost(Integer postId) {
         blogPostRepository.delete(postId);
+    }
+
+    @Override
+    public List<BlogPostPreviewDto> filterFeedByTags(List<String> tags) {
+        return blogPostRepository.findByTags(tags)
+                .stream()
+                .map(BlogPostMapper::toPreviewDto)
+                .collect(Collectors.toList());
     }
 }

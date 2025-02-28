@@ -18,7 +18,7 @@ public final class BlogPostMapper {
 
     public static BlogPost toModel(BlogPostDto dto) throws IOException {
         return new BlogPost(dto.getId(), dto.getName(), dto.getFile().getBytes(), dto.getText(),
-                dto.getNumberOfLikes(), getTags(dto));
+                dto.getNumberOfLikes(), getTags(dto.getTagsSeparatedByComma()));
     }
 
     public static BlogPostDto toDto(BlogPost model) {
@@ -64,10 +64,10 @@ public final class BlogPostMapper {
         return preview.toString().trim() + " ...";
     }
 
-    private static List<String> getTags(BlogPostDto dto) {
+    public static List<String> getTags(String tagsString) {
         List<String> tags = new ArrayList<>();
-        if (!StringUtils.isEmpty(dto.getTagsSeparatedByComma())) {
-            String[] tagsArray = dto.getTagsSeparatedByComma().replaceAll(StringUtils.SPACE, StringUtils.EMPTY)
+        if (!StringUtils.isEmpty(tagsString)) {
+            String[] tagsArray = tagsString.replaceAll(StringUtils.SPACE, StringUtils.EMPTY)
                     .split(",");
             for (String tag : tagsArray) {
                 if (tag.startsWith("#")) {

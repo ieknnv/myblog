@@ -19,4 +19,6 @@ public interface BlogPostRepository {
     void addLike(Integer postId);
 
     void delete(Integer postId);
+
+    List<BlogPost> findByTags(List<String> tags);
 }

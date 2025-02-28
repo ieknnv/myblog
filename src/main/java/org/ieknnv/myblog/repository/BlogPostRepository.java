@@ -6,7 +6,9 @@ import org.ieknnv.myblog.model.BlogPost;
 
 public interface BlogPostRepository {
 
-    void savePost(BlogPost post);
+    void save(BlogPost post);
+
+    void update(BlogPost updatedPost);
 
     byte[] findImageByPostId(Integer postId);
 

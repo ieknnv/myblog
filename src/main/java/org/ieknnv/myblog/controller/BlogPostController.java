@@ -1,5 +1,6 @@
 package org.ieknnv.myblog.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.ieknnv.myblog.dto.BlogPostDto;
@@ -10,6 +11,7 @@ import org.ieknnv.myblog.service.CommentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +42,19 @@ public class BlogPostController {
         return "post";
     }
 
+    @PostMapping
+    public String addPost(@ModelAttribute BlogPostDto newPost) throws IOException {
+        blogPostService.createPost(newPost);
+        return "redirect:/feed";
+    }
+
+    @PostMapping("/{postId}/update")
+    public String updatePost(@PathVariable(name = "postId") int postId, @ModelAttribute BlogPostDto updatedPost) throws IOException {
+        updatedPost.setId(postId);
+        blogPostService.updatePost(updatedPost);
+        return "redirect:/posts/" + postId;
+    }
+
     @PostMapping("/{postId}/comment")
     public String addComment(@PathVariable(name = "postId") int postId, @ModelAttribute CommentDto commentDto) {
         commentService.addCommentToPost(commentDto);
@@ -65,5 +80,11 @@ public class BlogPostController {
             @PathVariable(name = "commentId") int commentId) {
         commentService.delete(commentId);
         return "redirect:/posts/" + postId;
+    }
+
+    @ExceptionHandler(value = IOException.class)
+    public String handleException(Model model) {
+        model.addAttribute("error", "Не удалось загрузить картинку поста!");
+        return "error";
     }
 }

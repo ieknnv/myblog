@@ -9,7 +9,9 @@ import org.ieknnv.myblog.dto.BlogPostPreviewDto;
 
 public interface BlogPostService {
 
-    void createNewPost(BlogPostDto newPost) throws IOException;
+    void createPost(BlogPostDto newPost) throws IOException;
+
+    void updatePost(BlogPostDto updatedPost) throws IOException;
 
     Optional<byte[]> findImageByPostId(Integer postId);
 

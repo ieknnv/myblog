@@ -157,52 +157,122 @@
     .comment-button:hover {
         background-color: #e0e0e0;
     }
+    .form-container {
+        width: 550px;
+        margin: 10px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        background-color: #f9f9f9;
+    }
+    .form-container .form-group {
+        margin-bottom: 15px;
+    }
+    .form-container label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .form-container input,
+    .form-container textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        resize: none;
+    }
+    .form-container button {
+        width: 100%;
+        padding: 10px;
+        background-color: #f2f2f2;
+        color: black;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    .form-container button:hover {
+        background-color: #e0e0e0;
+    }
     </style>
 </head>
 <body>
-    <h1 th:text="${postDto.name}" style="font-family: Roboto, sans-serif;"></h1>
-    <img th:src="@{/image/post/{postId}(postId=${postDto.id})}" width="600" height="400">
-    <div class="text-container" th:text="${postDto.text}"></div>
-    <!--  Хэш теги -->
-    <div class="hashtags-container">
-        <span class="hashtag" th:each="tag : ${postDto.tags}" th:text="${tag}"></span>
-    </div>
-    <!--  Кнопки редактирования/Удаления -->
-    <div class="button-container">
-        <form th:action="@{/posts/{postId}/likes(postId=${postDto.id})}" method="POST">
+<h1 th:text="${postDto.name}" style="font-family: Roboto, sans-serif;"></h1>
+<img th:src="@{/image/post/{postId}(postId=${postDto.id})}" width="600" height="400">
+<div class="text-container" th:text="${postDto.text}"></div>
+<!--  Хэш теги -->
+<div class="hashtags-container">
+    <span class="hashtag" th:each="tag : ${postDto.tags}" th:text="${tag}"></span>
+</div>
+<!--  Кнопки редактирования/Удаления -->
+<div class="button-container">
+    <form th:action="@{/posts/{postId}/likes(postId=${postDto.id})}" method="POST">
         <button class="btn" th:text="'Нравится: ' + ${postDto.numberOfLikes}"></button>
-        </form>
-        <button class="btn">Редактировать</button>
-        <button class="btn">Удалить</button>
-    </div>
-    <br>
-    <h3 style="font-family: Roboto, sans-serif;">Комментарии</h3>
-    <!-- Форма добавления нового комментария -->
-    <div class="comment-container">
-        <form th:action="@{/posts/{postId}/comment(postId=${postDto.id})}" method="POST" th:object="${commentDto}">
-            <input type="text" id="nickName" name="nickName" placeholder="Ваше имя:" class="comment-input" required>
-            <textarea id="content" name="content" placeholder="Напишите ваш комментарий здесь..." class="comment-textarea" required></textarea>
-            <button type="submit" class="comment-button">Добавить комментарий</button>
-        </form>
-    </div>
-    <!-- Список комментариев -->
-    <div class="comment-container" th:each="comment : ${comments}">
-        <div class="comment-username"><span th:text="${comment.nickName}"/></div>
-        <form th:action="@{/posts/{postId}/comments/{commentId}(postId=${postDto.id}, commentId=${comment.id})}" method="POST" th:object="${commentUpdateDto}">
-            <textarea id="commentContent" name="updatedCommentContent" th:text="${comment.content}" class="comment-text" rows="5"></textarea>
-        </form>
-        <form th:action="@{/posts/{postId}/comments/{commentId}/delete(postId=${postDto.id}, commentId=${comment.id})}" method="POST">
-            <input type="hidden" name="_method" value="delete">
-            <button type="submit" class="remove-btn">Удалить</button>
-        </form>
-    </div>
+    </form>
+    <button class="btn" onclick="toggleEditPostForm()">Редактировать</button>
+    <button class="btn">Удалить</button>
+</div>
+<!-- Скрываемая форма для редактирования поста -->
+<div class="form-container" style="display: none;" id="postForm">
+    <form th:action="@{/posts/{postId}/update(postId=${postDto.id})}" method="POST" th:object="${blogPostDto}" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="name">Имя:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="file">Прикрепите картинку:</label>
+            <input type="file" id="file" name="file" required>
+        </div>
+        <div class="form-group">
+            <label for="text">Текст:</label>
+            <textarea id="text" name="text" rows="5" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="tagsSeparatedByComma">Теги (ввод - через запятую):</label>
+            <input type="text" id="tagsSeparatedByComma" name="tagsSeparatedByComma">
+        </div>
+        <button type="submit">Сохранить изменения</button>
+    </form>
+</div>
+<br>
+<h3 style="font-family: Roboto, sans-serif;">Комментарии</h3>
+<!-- Форма добавления нового комментария -->
+<div class="comment-container">
+    <form th:action="@{/posts/{postId}/comment(postId=${postDto.id})}" method="POST" th:object="${commentDto}">
+        <input type="text" id="nickName" name="nickName" placeholder="Ваше имя:" class="comment-input" required>
+        <textarea id="content" name="content" placeholder="Напишите ваш комментарий здесь..." class="comment-textarea"
+                  required></textarea>
+        <button type="submit" class="comment-button">Добавить комментарий</button>
+    </form>
+</div>
+<!-- Список комментариев -->
+<div class="comment-container" th:each="comment : ${comments}">
+    <div class="comment-username"><span th:text="${comment.nickName}"/></div>
+    <form th:action="@{/posts/{postId}/comments/{commentId}(postId=${postDto.id}, commentId=${comment.id})}"
+          method="POST" th:object="${commentUpdateDto}">
+        <textarea id="commentContent" name="updatedCommentContent" th:text="${comment.content}" class="comment-text"
+                  rows="5"></textarea>
+    </form>
+    <form th:action="@{/posts/{postId}/comments/{commentId}/delete(postId=${postDto.id}, commentId=${comment.id})}"
+          method="POST">
+        <input type="hidden" name="_method" value="delete">
+        <button type="submit" class="remove-btn">Удалить</button>
+    </form>
+</div>
 
-    <script>
-        document.body.addEventListener('keydown', (event) => {
-            if(event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
-                event.target.form?.submit();
-            }
-        });
-    </script>
+<script>
+    document.body.addEventListener('keydown', (event) => {
+        if(event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
+            event.target.form?.submit();
+        }
+    });
+</script>
+<script>
+    function toggleEditPostForm() {
+        const form = document.getElementById('postForm');
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+</script>
 </body>
 </html>

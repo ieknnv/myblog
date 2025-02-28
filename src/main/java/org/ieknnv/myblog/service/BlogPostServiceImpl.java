@@ -23,9 +23,15 @@ public class BlogPostServiceImpl implements BlogPostService{
     }
 
     @Override
-    public void createNewPost(BlogPostDto newPostDto) throws IOException {
+    public void createPost(BlogPostDto newPostDto) throws IOException {
         BlogPost newPost = BlogPostMapper.toModel(newPostDto);
-        blogPostRepository.savePost(newPost);
+        blogPostRepository.save(newPost);
+    }
+
+    @Override
+    public void updatePost(BlogPostDto updatedPostDto) throws IOException {
+        BlogPost updatedPost = BlogPostMapper.toModel(updatedPostDto);
+        blogPostRepository.update(updatedPost);
     }
 
     @Override

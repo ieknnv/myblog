@@ -54,6 +54,17 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
             WHERE id = :postId
             """;
 
+    private static final String DELETE_POST_TAGS_QUERY = """
+            DELETE FROM post_tag_relation
+            WHERE post_id = :postId
+            """;
+
+    private static final String UPDATE_POST_QUERY = """
+            UPDATE blog_post
+            SET post_name = :name, post_text = :text, post_image = :image
+            WHERE id = :postId
+            """;
+
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final SimpleJdbcInsert insertBlogPost;
     private final SimpleJdbcInsert insertTag;
@@ -99,13 +110,29 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
     }
 
     @Override
-    public void savePost(BlogPost post) {
+    public void save(BlogPost post) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("post_name", post.getName());
         parameters.put("post_text", post.getText());
         parameters.put("post_image", post.getImage());
         Number newId = insertBlogPost.executeAndReturnKey(parameters);
         saveTags(newId.intValue(), post.getTags());
+    }
+
+    @Override
+    public void update(BlogPost updatedPost) {
+        Map<String, Object> deleteTagParameters = new HashMap<>();
+        deleteTagParameters.put("postId", updatedPost.getId());
+        namedParameterJdbcTemplate.update(DELETE_POST_TAGS_QUERY, deleteTagParameters);
+
+        Map<String, Object> updatePostParameters = new HashMap<>();
+        updatePostParameters.put("name", updatedPost.getName());
+        updatePostParameters.put("text", updatedPost.getText());
+        updatePostParameters.put("image", updatedPost.getImage());
+        updatePostParameters.put("postId", updatedPost.getId());
+        namedParameterJdbcTemplate.update(UPDATE_POST_QUERY, updatePostParameters);
+
+        saveTags(updatedPost.getId(), updatedPost.getTags());
     }
 
     @Override
@@ -135,7 +162,7 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
         namedParameterJdbcTemplate.update(UPDATE_NUMBER_OF_LIKES_QUERY, parameters);
     }
 
-    private void saveTags(int newPostId, List<String> tags) {
+    private void saveTags(int postId, List<String> tags) {
         if (tags.isEmpty()) {
             return;
         }
@@ -150,7 +177,7 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
                 tagId = insertTag.executeAndReturnKey(tagInsertParameters).intValue();
             }
             Map<String, Object> parameters = new HashMap<>();
-            parameters.put("post_id", newPostId);
+            parameters.put("post_id", postId);
             parameters.put("tag_id", tagId);
             insertPostTagRelation.execute(parameters);
         }

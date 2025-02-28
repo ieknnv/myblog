@@ -65,7 +65,7 @@
 <!-- Скрываемая форма для добавления нового поста -->
 <div class="form-container" style="display: none;" id="postForm">
     <h2>Новый пост</h2>
-    <form th:action="@{/feed}" method="POST" th:object="${blogPostDto}" enctype="multipart/form-data">
+    <form th:action="@{/posts}" method="POST" th:object="${blogPostDto}" enctype="multipart/form-data">
         <label for="name">Название:</label>
         <input type="text" id="name" name="name" required>
         <label for="file">Прикрепите картинку:</label>

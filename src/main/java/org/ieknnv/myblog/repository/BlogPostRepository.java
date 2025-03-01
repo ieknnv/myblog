@@ -3,6 +3,8 @@ package org.ieknnv.myblog.repository;
 import java.util.List;
 
 import org.ieknnv.myblog.model.BlogPost;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface BlogPostRepository {
 
@@ -21,4 +23,6 @@ public interface BlogPostRepository {
     void delete(Integer postId);
 
     List<BlogPost> findByTags(List<String> tags);
+
+    Page<BlogPost> getPostFeedPage(Pageable pageable);
 }

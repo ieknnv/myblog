@@ -10,6 +10,9 @@ import javax.sql.DataSource;
 
 import org.ieknnv.myblog.model.BlogPost;
 import org.ieknnv.myblog.model.Tag;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -87,6 +90,24 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
             WHERE id = :postId
             """;
 
+    private static final String SELECT_POSTS_BY_PAGE = """
+          SELECT bp.id, bp.post_name, bp.post_text, bp.post_image, bp.number_of_likes, pt.tag_name
+          FROM blog_post bp
+          LEFT JOIN post_tag_relation ptr ON bp.id = ptr.post_id
+          LEFT JOIN post_tag pt ON pt.id = ptr.tag_id
+          WHERE bp.id IN (
+              SELECT id FROM blog_post
+              ORDER BY id DESC
+              LIMIT :limit
+              OFFSET :offset
+          )
+          ORDER BY bp.id desc
+          """;
+
+    private static final String SELECT_TOTAL_NUMBER_OF_POSTS = """
+            SELECT COUNT(*) AS row_count FROM blog_post;
+            """;
+
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final SimpleJdbcInsert insertBlogPost;
     private final SimpleJdbcInsert insertTag;
@@ -97,7 +118,7 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
             resultSet.getInt("id"), resultSet.getString("tag_name"));
     private final RowMapper<byte[]> imageRowMapper = (ResultSet resultSet, int rowNum) -> resultSet.getBytes(
             "post_image");
-    private final ResultSetExtractor<List<BlogPost>> postRowMapper = (ResultSet resultSet) -> {
+    private final ResultSetExtractor<List<BlogPost>> postRowMapperWithTags = (ResultSet resultSet) -> {
         Map<Integer, BlogPost> blogPostMap = new HashMap<>();
         while (resultSet.next()) {
             Integer id = resultSet.getInt("id");
@@ -167,13 +188,13 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
 
     @Override
     public List<BlogPost> getPostFeed() {
-        return namedParameterJdbcTemplate.query(SELECT_ALL_POSTS_QUERY, postRowMapper);
+        return namedParameterJdbcTemplate.query(SELECT_ALL_POSTS_QUERY, postRowMapperWithTags);
     }
 
     @Override
     public BlogPost findPostById(Integer postId) {
         SqlParameterSource parameters = new MapSqlParameterSource("id", postId);
-        List<BlogPost> result = namedParameterJdbcTemplate.query(SELECT_POST_BY_ID_QUERY, parameters, postRowMapper);
+        List<BlogPost> result = namedParameterJdbcTemplate.query(SELECT_POST_BY_ID_QUERY, parameters, postRowMapperWithTags);
         return CollectionUtils.isEmpty(result) ? null : result.getFirst();
     }
 
@@ -195,7 +216,18 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
     public List<BlogPost> findByTags(List<String> tags) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("tags", tags);
-        return namedParameterJdbcTemplate.query(SELECT_POSTS_BY_TAGS_QUERY, parameters, postRowMapper);
+        return namedParameterJdbcTemplate.query(SELECT_POSTS_BY_TAGS_QUERY, parameters, postRowMapperWithTags);
+    }
+
+    @Override
+    public Page<BlogPost> getPostFeedPage(Pageable pageable) {
+        int total = namedParameterJdbcTemplate.query(SELECT_TOTAL_NUMBER_OF_POSTS,
+                (ResultSet resultSet, int rowNum) -> resultSet.getInt("row_count")).getFirst();
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("limit", pageable.getPageSize());
+        parameters.put("offset", pageable.getOffset());
+        List<BlogPost> posts = namedParameterJdbcTemplate.query(SELECT_POSTS_BY_PAGE, parameters, postRowMapperWithTags);
+        return new PageImpl<>(posts, pageable, total);
     }
 
     private void saveTags(int postId, List<String> tags) {

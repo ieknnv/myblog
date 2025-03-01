@@ -11,6 +11,8 @@ import org.ieknnv.myblog.dto.BlogPostPreviewDto;
 import org.ieknnv.myblog.mapper.BlogPostMapper;
 import org.ieknnv.myblog.model.BlogPost;
 import org.ieknnv.myblog.repository.BlogPostRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -70,5 +72,10 @@ public class BlogPostServiceImpl implements BlogPostService{
                 .stream()
                 .map(BlogPostMapper::toPreviewDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<BlogPost> getPostFeedPage(int pageNumber, int pageSize) {
+        return blogPostRepository.getPostFeedPage(PageRequest.of(pageNumber, pageSize));
     }
 }

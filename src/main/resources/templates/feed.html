@@ -29,13 +29,13 @@
             margin-top: 10px;
             cursor: pointer;
         }
-        .btn-add {
+        .btn-functional {
             margin-bottom: 20px;
             background-color: #007bff;
             color: white;
             border: none;
         }
-        .btn-add:hover {
+        .btn-functional:hover {
             background-color: #0056b3;
         }
         .block {
@@ -102,7 +102,16 @@
         <button type="submit">Искать</button>
     </div>
 </form>
-<button class="btn-add" onclick="toggleForm()">Новый пост</button>
+<button class="btn-functional" onclick="toggleForm()">Новый пост</button>
+<form th:action="@{/feed/pages/1/5}" style="display: inline;">
+    <button type="submit" class="btn-functional">5 постов на странице</button>
+</form>
+<form th:action="@{/feed/pages/1/10}" style="display: inline;">
+    <button class="btn-functional">10 постов на странице</button>
+</form>
+<form th:action="@{/feed/pages/1/15}" style="display: inline;">
+    <button class="btn-functional">15 постов на странице</button>
+</form>
 <!-- Скрываемая форма для добавления нового поста -->
 <div class="form-container" style="display: none;" id="postForm">
     <h2>Новый пост</h2>
@@ -129,6 +138,16 @@
         <p><i>Комментариев: <span th:text="${blogPost.numberOfComments}"/>  Лайков: <span th:text="${blogPost.numberOfLikes}"/> Теги: <span th:text="${blogPost.tagsSeparatedByComma}"/></i></p>
         <p th:text="${blogPost.textPreview}"/>
     </div>
+</div>
+
+<!-- Пагинация -->
+<div th:if="${numberOfPages != null}">
+    <br>
+    <span>Страницы:</span>
+    <br>
+    <p th:each="i : ${#numbers.sequence(1, {numberOfPages}, 1)}" style="display: inline;">
+        <a th:href="@{/feed/pages/{i}/{pageSize}(pageSize=${pageSize}, i=${i})}" th:text="${i} "></a>
+    </p>
 </div>
 
 <!-- Скрипты-->

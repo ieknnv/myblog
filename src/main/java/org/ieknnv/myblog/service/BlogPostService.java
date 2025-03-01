@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.ieknnv.myblog.dto.BlogPostDto;
 import org.ieknnv.myblog.dto.BlogPostPreviewDto;
+import org.ieknnv.myblog.model.BlogPost;
+import org.springframework.data.domain.Page;
 
 public interface BlogPostService {
 
@@ -24,4 +26,6 @@ public interface BlogPostService {
     void deletePost(Integer postId);
 
     List<BlogPostPreviewDto> filterFeedByTags(List<String> tags);
+
+    Page<BlogPost> getPostFeedPage(int pageNumber, int pageSize);
 }

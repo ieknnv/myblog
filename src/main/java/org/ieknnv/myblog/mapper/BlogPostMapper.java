@@ -17,7 +17,8 @@ public final class BlogPostMapper {
     }
 
     public static BlogPost toModel(BlogPostDto dto) throws IOException {
-        return new BlogPost(dto.getId(), dto.getName(), dto.getFile().getBytes(), dto.getText(),
+        return new BlogPost(dto.getId(), dto.getName(),
+                dto.getFile() == null ? null : dto.getFile().getBytes(), dto.getText(),
                 dto.getNumberOfLikes(), getTags(dto.getTagsSeparatedByComma()));
     }
 

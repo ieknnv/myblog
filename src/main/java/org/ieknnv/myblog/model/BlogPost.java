@@ -22,6 +22,7 @@ public class BlogPost {
     private String text;
     private long numberOfLikes;
     private List<String> tags;
+    private long numberOfComments;
 
     public BlogPost(Integer id, String name, byte[] image, String text, long numberOfLikes) {
         this.id = id;

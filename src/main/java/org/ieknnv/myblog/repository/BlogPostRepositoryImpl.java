@@ -36,7 +36,8 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
             """;
 
     private static final String SELECT_ALL_POSTS_QUERY = """
-            SELECT bp.id, bp.post_name, bp.post_text, bp.post_image, bp.number_of_likes, pt.tag_name
+            SELECT bp.id, bp.post_name, bp.post_text, bp.post_image, bp.number_of_likes, pt.tag_name,
+            (SELECT count(*) FROM post_comment pc WHERE pc.post_id = bp.id) as number_of_comments
             FROM blog_post bp
             LEFT JOIN post_tag_relation ptr ON bp.id = ptr.post_id
             LEFT JOIN post_tag pt ON pt.id = ptr.tag_id
@@ -44,7 +45,7 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
             """;
 
     private static final String SELECT_POSTS_BY_TAGS_QUERY = """
-            SELECT selected_posts_with_tags.*
+            SELECT selected_posts_with_tags.*, (SELECT count(*) FROM post_comment pc WHERE pc.post_id = selected_posts_with_tags.id) as number_of_comments
             FROM (
                 SELECT bp.id, bp.post_name, bp.post_text, bp.post_image, bp.number_of_likes, pt.tag_name
                 FROM blog_post bp
@@ -61,7 +62,8 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
             """;
 
     private static final String SELECT_POST_BY_ID_QUERY = """
-            SELECT bp.id, bp.post_name, bp.post_text, bp.post_image, bp.number_of_likes, pt.tag_name
+            SELECT bp.id, bp.post_name, bp.post_text, bp.post_image, bp.number_of_likes, pt.tag_name,
+            (SELECT count(*) FROM post_comment pc WHERE pc.post_id = bp.id) as number_of_comments
             FROM blog_post bp
             LEFT JOIN post_tag_relation ptr ON bp.id = ptr.post_id
             LEFT JOIN post_tag pt ON pt.id = ptr.tag_id
@@ -91,7 +93,8 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
             """;
 
     private static final String SELECT_POSTS_BY_PAGE = """
-          SELECT bp.id, bp.post_name, bp.post_text, bp.post_image, bp.number_of_likes, pt.tag_name
+          SELECT bp.id, bp.post_name, bp.post_text, bp.post_image, bp.number_of_likes, pt.tag_name,
+          (SELECT count(*) FROM post_comment pc WHERE pc.post_id = bp.id) as number_of_comments
           FROM blog_post bp
           LEFT JOIN post_tag_relation ptr ON bp.id = ptr.post_id
           LEFT JOIN post_tag pt ON pt.id = ptr.tag_id
@@ -126,6 +129,7 @@ public class BlogPostRepositoryImpl implements BlogPostRepository {
                 BlogPost post = new BlogPost(id, resultSet.getString("post_name"),
                         resultSet.getBytes("post_image"), resultSet.getString("post_text"),
                         resultSet.getLong("number_of_likes"));
+                post.setNumberOfComments(resultSet.getLong("number_of_comments"));
                 List<String> tags = new ArrayList<>();
                 if (resultSet.getString("tag_name") != null) {
                     tags.add(resultSet.getString("tag_name"));

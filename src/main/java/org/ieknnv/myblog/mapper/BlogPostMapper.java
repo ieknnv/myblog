@@ -17,9 +17,14 @@ public final class BlogPostMapper {
     }
 
     public static BlogPost toModel(BlogPostDto dto) throws IOException {
-        return new BlogPost(dto.getId(), dto.getName(),
-                dto.getFile() == null ? null : dto.getFile().getBytes(), dto.getText(),
-                dto.getNumberOfLikes(), getTags(dto.getTagsSeparatedByComma()));
+        return BlogPost.builder()
+                .id(dto.getId())
+                .name(dto.getName())
+                .image(dto.getFile() == null ? null : dto.getFile().getBytes())
+                .text(dto.getText())
+                .numberOfLikes(dto.getNumberOfLikes())
+                .tags(getTags(dto.getTagsSeparatedByComma()))
+                .build();
     }
 
     public static BlogPostDto toDto(BlogPost model) {
@@ -40,7 +45,7 @@ public final class BlogPostMapper {
         dto.setId(model.getId());
         dto.setName(model.getName());
         dto.setTextPreview(getPreview(model.getText()));
-        dto.setNumberOfComments(0); // TODO comments
+        dto.setNumberOfComments(model.getNumberOfComments());
         dto.setNumberOfLikes(model.getNumberOfLikes());
         dto.setTagsSeparatedByComma(StringUtils.join(model.getTags(), ", "));
         return dto;

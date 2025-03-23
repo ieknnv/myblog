@@ -9,28 +9,26 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
 
-import org.ieknnv.myblog.configuration.BlogPostServiceTestConfig;
 import org.ieknnv.myblog.dto.BlogPostDto;
 import org.ieknnv.myblog.model.BlogPost;
 import org.ieknnv.myblog.repository.BlogPostRepository;
+import org.ieknnv.myblog.repository.BlogPostRepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-@ExtendWith({SpringExtension.class})
-@ContextConfiguration(classes = BlogPostServiceTestConfig.class)
+@SpringBootTest(classes = {BlogPostServiceImpl.class, BlogPostRepositoryImpl.class})
 class BlogPostServiceTest {
 
-    @Autowired
+    @MockitoBean
     private BlogPostRepository blogPostRepository;
 
     @Autowired
-    private BlogPostServiceImpl blogPostService;
+    private BlogPostService blogPostService;
 
     @BeforeEach
     void setUp() {

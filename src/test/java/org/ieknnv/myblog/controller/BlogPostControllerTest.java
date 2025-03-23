@@ -13,37 +13,31 @@ import java.util.Optional;
 
 import org.ieknnv.myblog.dto.BlogPostDto;
 import org.ieknnv.myblog.service.BlogPostService;
+import org.ieknnv.myblog.service.BlogPostServiceImpl;
 import org.ieknnv.myblog.service.CommentService;
-import org.junit.jupiter.api.BeforeEach;
+import org.ieknnv.myblog.service.CommentServiceImpl;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(classes = {BlogPostController.class, BlogPostServiceImpl.class, CommentServiceImpl.class})
+@AutoConfigureMockMvc
 class BlogPostControllerTest {
 
-    @Mock
+    @MockitoBean
     private BlogPostService blogPostService;
 
-    @Mock
+    @MockitoBean
     private CommentService commentService;
 
-    @InjectMocks
+    @Autowired
     private BlogPostController controller;
 
+    @Autowired
     private MockMvc mockMvc;
-
-    @BeforeEach
-    public void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
-        Mockito.reset(blogPostService);
-        Mockito.reset(commentService);
-    }
 
     @Test
     void testPostFound() throws Exception {

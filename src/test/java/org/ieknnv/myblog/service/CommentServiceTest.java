@@ -6,24 +6,22 @@ import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
 
-import org.ieknnv.myblog.configuration.CommentServiceTestConfig;
 import org.ieknnv.myblog.dto.CommentDto;
 import org.ieknnv.myblog.model.Comment;
 import org.ieknnv.myblog.repository.CommentRepository;
+import org.ieknnv.myblog.repository.CommentRepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-@ExtendWith({SpringExtension.class})
-@ContextConfiguration(classes = CommentServiceTestConfig.class)
+@SpringBootTest(classes = {CommentServiceImpl.class, CommentRepositoryImpl.class})
 class CommentServiceTest {
 
-    @Autowired
+    @MockitoBean
     private CommentRepository commentRepository;
 
     @Autowired

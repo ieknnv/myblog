@@ -3,12 +3,12 @@ package org.ieknnv.myblog.repository;
 import org.ieknnv.myblog.configuration.DataSourceTestConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.test.context.ActiveProfiles;
 
-@SpringJUnitConfig(classes = {DataSourceTestConfig.class, BlogPostRepositoryImpl.class, CommentRepositoryImpl.class})
-@TestPropertySource(locations = "classpath:test-application.properties")
+@SpringBootTest(classes = {DataSourceTestConfig.class, BlogPostRepositoryImpl.class, CommentRepositoryImpl.class})
+@ActiveProfiles("test")
 public abstract class AbstractDaoTest {
 
     @Autowired
